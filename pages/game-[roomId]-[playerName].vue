@@ -29,7 +29,7 @@
         <button class="operator-button" @click="selectOperator('/')" :class="{ active: selectedOperator === '/' }">/</button>
       </div>
   
-      <button @click="nextNumberSet">Next Number Set</button>
+      <button @click="GotoEnd">Go to End game</button>
       <div>
         <p>Time Left: {{ timeLeft }} seconds</p>
       </div>
@@ -134,8 +134,16 @@
 
     // อัปเดตตัวเลขในปุ่มที่สองด้วยผลลัพธ์
     currentNumbers.value[secondNumber.value] = result;
+    currentNumbers.value[firstNumber.value] = null;
+
+    console.log('Result:', result);
+
+    const remainingNumbers = currentNumbers.value.filter(number => number !== null);
+    const isOnly24button = remainingNumbers.length === 1 && remainingNumbers[0] === 24;
+
+    console.log('isOnly24button:', isOnly24button);
+
     if (result === 24) {
-        const isOnly24button = currentNumbers.value.filter((num) => num !== null).length === 1;
         if (isOnly24button) {
             // ถ้าเหลือเพียงปุ่มเดียว แสดงว่าคำตอบถูกต้อง
             resultIs24.value = true;
@@ -145,7 +153,7 @@
         }
     }
     // รีเซ็ตค่าหลังจากคำนวณเสร็จ
-    currentNumbers.value[firstNumber.value] = null;
+    
     firstNumber.value = null;
     secondNumber.value = null;
     operator.value = null;
@@ -154,6 +162,9 @@
     selectedOperator.value = null;
   };
   
+  const GotoEnd = () => {
+    router.push(`/endgame-${roomId.value}-${playerName.value}`);
+  };
 
   const nextNumberSet = () => {
     resultIs24.value = false;

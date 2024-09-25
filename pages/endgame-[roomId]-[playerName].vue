@@ -41,7 +41,12 @@
 
   onMounted(() => {
     socket.emit('hostRoom', { roomId: roomId.value });
-    socket.on('updateAllPlayers', (updatedPlayers) => {
+
+    socket.on('updatePlayers', (updatedPlayers) => {
+      players.value = updatedPlayers;
+    });
+    
+    socket.on('updatescorePlayers', (updatedPlayers) => {
       players.value = updatedPlayers;
     });
 
