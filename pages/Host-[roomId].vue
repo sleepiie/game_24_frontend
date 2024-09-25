@@ -11,6 +11,7 @@
         </ul>
         <button @click="startGame" v-if="!isStarted">Start Game</button>
         <h4 v-if="isStarted">Game is Started</h4>
+        <h4 v-if="isStarted">Time Left: {{ timeLeft }} seconds</h4>
       </div>
     </div>
 </template>
@@ -25,6 +26,7 @@
   const players = ref({});
   const socket = io('http://localhost:3001');
   const isStarted = ref(false);
+  const timeLeft = ref(0);
   
   
   onMounted(() => {
@@ -32,6 +34,15 @@
   
     socket.on('updatePlayers', (updatedPlayers) => {
       players.value = updatedPlayers;
+    });
+
+    socket.on('updateTimeLeft' , (time) => {
+      timeLeft.value = time;
+    });
+
+    socket.on('gameEnded' , () => {
+      isStarted.value = false;
+      alert('Time is up! Game Over.');
     });
 
   });

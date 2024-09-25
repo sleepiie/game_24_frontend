@@ -8,8 +8,16 @@
       </div>
       <!-- ปุ่มตัวเลข -->
       <div class="number-grid" v-if="currentNumbers.length">
-        <button v-for="(number, index) in currentNumbers" :key="index" class="number-button" :class="{ 'selected': selectedNumber === index }" @click="selectNumber(index)">
-          {{ number }}
+        <button 
+            v-for="(number, index) in currentNumbers" 
+            :key="index"
+            class="number-button"  
+            :class="{ 'selected': selectedNumber === index ,
+            'empty-button': currentNumbers[index] === null,
+            'correct-answer': number === 24 && resultIs24 ,
+            'center': number === 24 && resultIs24}" 
+            @click="currentNumbers[index] != null && !resultIs24 ? selectNumber(index) : null">
+            {{ currentNumbers[index] != null ? number : '' }}
         </button>
       </div>
   
@@ -22,14 +30,18 @@
       </div>
   
       <button @click="nextNumberSet">Next Number Set</button>
+      <div>
+        <p>Time Left: {{ timeLeft }} seconds</p>
+      </div>
     </div>
 </template>
   
 <script setup>
   import { ref, onMounted } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import { io } from 'socket.io-client';
   
+  const router = useRouter();
   const route = useRoute();
   const roomId = ref(route.params.roomId);
   const playerName = ref(route.params.playerName);
@@ -42,6 +54,8 @@
 
   const selectedOperator = ref(null);
   const selectedNumber = ref(null);
+  const resultIs24 =ref(false);
+  const timeLeft = ref(0);
   
   onMounted(() => {
     socket.emit('joinGame', { roomId: roomId.value, playerName: playerName.value });
@@ -55,6 +69,16 @@
       currentNumbers.value = data.currentNumbers;
       currentSetIndex.value = data.currentSetIndex;
     });
+
+    socket.on('updateTimeLeft' , (time) => {
+      timeLeft.value = time;
+    });
+
+    socket.on('gameEnded' , () => {
+      router.push(`/endgame-${roomId.value}-${playerName.value}`);
+
+    });
+
   });
   
   const selectNumber = (index) => {
@@ -88,7 +112,6 @@
     }
   };
 
-  
   const calculateResult = () => {
     const num1 = currentNumbers.value[firstNumber.value];
     const num2 = currentNumbers.value[secondNumber.value];
@@ -108,11 +131,21 @@
         result = num1 / num2;
         break;
     }
-  
+
     // อัปเดตตัวเลขในปุ่มที่สองด้วยผลลัพธ์
     currentNumbers.value[secondNumber.value] = result;
-  
+    if (result === 24) {
+        const isOnly24button = currentNumbers.value.filter((num) => num !== null).length === 1;
+        if (isOnly24button) {
+            // ถ้าเหลือเพียงปุ่มเดียว แสดงว่าคำตอบถูกต้อง
+            resultIs24.value = true;
+            setTimeout(() => {
+                nextNumberSet();
+            }, 2000);
+        }
+    }
     // รีเซ็ตค่าหลังจากคำนวณเสร็จ
+    currentNumbers.value[firstNumber.value] = null;
     firstNumber.value = null;
     secondNumber.value = null;
     operator.value = null;
@@ -121,11 +154,15 @@
     selectedOperator.value = null;
   };
   
+
   const nextNumberSet = () => {
+    resultIs24.value = false;
     socket.emit('nextSet', { roomId: roomId.value, playerName: playerName.value });
   };
+
 </script>
   
+
 <style>
   .number-grid {
     display: grid;
@@ -181,6 +218,25 @@
   .operator-button.active {
   background-color: #378237; /* สีเข้มขึ้น */
  }
+
+ .empty-button {
+  background-color: transparent; /* พื้นหลังใส */
+  border: none; /* ลบเส้นขอบ */
+  box-shadow: none; /* ลบเงา */
+  pointer-events: none; /* ไม่สามารถคลิกได้ */
+}
+.correct-answer {
+  background-color: #5CB85C; /* สีเขียว */
+  pointer-events: none; /* ไม่สามารถคลิกได้ */
+}
   
+.correct-answer.center {
+  grid-column: 1 / span 8;
+  grid-row: 1 / span 5;
+  justify-self: center;
+  align-self: center;
+  width: 100px;
+  height: 100px;
+}
 </style>
   
