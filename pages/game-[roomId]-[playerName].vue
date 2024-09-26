@@ -29,7 +29,7 @@
         <button class="operator-button" @click="selectOperator('/')" :class="{ active: selectedOperator === '/' }">/</button>
       </div>
   
-      <button @click="GotoEnd">Go to End game</button>
+      <button @click="reset">reset</button>
       <div>
         <p>Time Left: {{ timeLeft }} seconds</p>
       </div>
@@ -45,12 +45,14 @@
   const route = useRoute();
   const roomId = ref(route.params.roomId);
   const playerName = ref(route.params.playerName);
+  const intitialNumbers = ref([]);
   const currentNumbers = ref([]);
   const currentSetIndex = ref(1);
   const firstNumber = ref(null); // เก็บค่าตัวเลขตัวแรก
   const secondNumber = ref(null); // เก็บค่าตัวเลขตัวที่สอง
   const operator = ref(null); // เก็บค่าของเครื่องหมาย
   const socket = io('http://localhost:3001');
+  
 
   const selectedOperator = ref(null);
   const selectedNumber = ref(null);
@@ -61,11 +63,13 @@
     socket.emit('joinGame', { roomId: roomId.value, playerName: playerName.value });
   
     socket.on('updateRoomData', (data) => {
+      intitialNumbers.value = [...data.currentNumbers];
       currentNumbers.value = data.currentNumbers;
       currentSetIndex.value = data.currentSetIndex;
     });
   
     socket.on('updateCurrentSet', (data) => {
+      intitialNumbers.value = [...data.currentNumbers];
       currentNumbers.value = data.currentNumbers;
       currentSetIndex.value = data.currentSetIndex;
     });
@@ -76,10 +80,28 @@
 
     socket.on('gameEnded' , () => {
       router.push(`/endgame-${roomId.value}-${playerName.value}`);
-
     });
 
+    socket.on('finished' ,(data) => {
+        console.log(data.playerName);
+        console.log(playerName.value);    
+        if (data.playerName === playerName.value) {
+            router.push(`/endgame-${roomId.value}-${playerName.value}`);
+        }
+    });
+
+
   });
+
+  const reset = () => {
+    currentNumbers.value = [...intitialNumbers.value]; // คืนค่าเป็นตัวเลขเริ่มต้น
+    firstNumber.value = null;
+    secondNumber.value = null;
+    operator.value = null;
+    selectedNumber.value = null;
+    selectedOperator.value = null;
+    resultIs24.value = false;
+  };
   
   const selectNumber = (index) => {
     if (selectedNumber.value === index) {
@@ -129,6 +151,7 @@
         break;
       case '/':
         result = num1 / num2;
+        result = parseFloat(result.toFixed(2));
         break;
     }
 
@@ -138,6 +161,9 @@
 
     console.log('Result:', result);
 
+    selectedNumber.value = secondNumber.value;
+    firstNumber.value = secondNumber.value;
+
     const remainingNumbers = currentNumbers.value.filter(number => number !== null);
     const isOnly24button = remainingNumbers.length === 1 && remainingNumbers[0] === 24;
 
@@ -146,6 +172,8 @@
     if (result === 24) {
         if (isOnly24button) {
             // ถ้าเหลือเพียงปุ่มเดียว แสดงว่าคำตอบถูกต้อง
+            selectedNumber.value = null;
+            firstNumber.value = null;
             resultIs24.value = true;
             setTimeout(() => {
                 nextNumberSet();
@@ -154,16 +182,9 @@
     }
     // รีเซ็ตค่าหลังจากคำนวณเสร็จ
     
-    firstNumber.value = null;
     secondNumber.value = null;
     operator.value = null;
-
-    selectedNumber.value = null;
     selectedOperator.value = null;
-  };
-  
-  const GotoEnd = () => {
-    router.push(`/endgame-${roomId.value}-${playerName.value}`);
   };
 
   const nextNumberSet = () => {

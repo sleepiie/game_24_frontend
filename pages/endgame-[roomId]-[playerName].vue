@@ -30,14 +30,14 @@
   const playerName =ref(route.params.playerName);
   const socket = io('http://localhost:3001');
   const isStarted = ref(false);
-  const timeLeft = ref(0);
-
+  const timeLeft = ref(999);
+  
   if (timeLeft.value > 0) {
     isStarted.value = true;
-  } else {
-    isStarted.value = false;
-    
   }
+  else {
+    isStarted.value = false;
+  } 
 
   onMounted(() => {
     socket.emit('hostRoom', { roomId: roomId.value });
@@ -45,13 +45,16 @@
     socket.on('updatePlayers', (updatedPlayers) => {
       players.value = updatedPlayers;
     });
-    
+
     socket.on('updatescorePlayers', (updatedPlayers) => {
       players.value = updatedPlayers;
     });
 
     socket.on('updateTimeLeft' , (time) => {
       timeLeft.value = time;
+    });
+    socket.on('gameEnded', () => {
+      isStarted.value = false;
     });
 
   });
