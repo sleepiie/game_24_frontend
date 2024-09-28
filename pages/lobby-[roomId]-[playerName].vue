@@ -34,7 +34,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter} from 'vue-router';
 import { io } from 'socket.io-client';
 
 const route = useRoute();
@@ -43,6 +43,8 @@ const roomId = ref(route.params.roomId);
 const playerName = ref(route.params.playerName);
 const players = ref({});
 const socket = io('http://localhost:3001');
+
+
 
 onMounted(() => {
   socket.emit('hostRoom', { roomId: roomId.value, playerName: playerName.value });
@@ -54,13 +56,17 @@ onMounted(() => {
   socket.on('gameStarted', () => {
     router.push(`/game-${roomId.value}-${playerName.value}`);
   });
+  socket.on('roomEnded', () => {
+    router.push(`/`);
+  });
 });
 
 onUnmounted(() => {
-  socket.emit('leaveRoom', { roomId: roomId.value, playerName: playerName.value });
   socket.disconnect();
 });
+
 </script>
+
 
 <style scoped>
 .lobby-container {
@@ -88,8 +94,10 @@ onUnmounted(() => {
 .players-title {
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin: 0;
   text-align: center;
+  padding-top: 5px;
+  margin-bottom: 20px;
 }
 
 .players-list {
@@ -99,6 +107,7 @@ onUnmounted(() => {
   max-height: 200px;
   overflow-y: auto;
   border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .scrollable-list {
@@ -106,19 +115,6 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 8px;
 }
-
-.player-item {
-  background-color: #333;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  transition: background-color 0.3s;
-}
-
-.player-item.highlight {
-  background-color: #ffa726;
-}
-
 .waiting-section {
   display: flex;
   align-items: center;
@@ -190,6 +186,6 @@ onUnmounted(() => {
   color: #fff;
 }
 .player-card.highlight {
-  background-color: #ffa726;
+  background-color: #28a745;
 }
 </style>

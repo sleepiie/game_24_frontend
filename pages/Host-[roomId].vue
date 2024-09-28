@@ -11,7 +11,7 @@
           :key="name"
           class="player-card"
         >
-          <span class="player-rank">{{ '#' + (index + 1) }}</span>
+          <span class="player-rank">{{ getRankEmoji(index) }} {{ '#' + (index + 1) }}</span>
           <span class="player-name">{{ name }}</span>
           <span class="player-score">{{ player.score }}</span>
         </div>
@@ -75,8 +75,19 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  socket.disconnect();
+  socket.emit('endRoom', { roomId: roomId.value });
 });
+
+const getRankEmoji = (index) => {
+  if (index === 0) {
+    return '🥇'; // ถ้วยทอง
+  } else if (index === 1) {
+    return '🥈'; // ถ้วยเงิน
+  } else if (index === 2) {
+    return '🥉'; // ถ้วยทองแดง
+  }
+  return ''; // ถ้าไม่ใช่อันดับ 1-3 จะไม่มีอีโมจิ
+};
 
 const startGame = () => {
   isStarted.value = true;
