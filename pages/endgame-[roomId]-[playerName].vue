@@ -27,7 +27,7 @@
     <div v-if="isStarted && !isGameEnd" class="timer-bar">
         <div
           class="progress"
-          :style="{ width: `${(timeLeft / maxTime) * 100}%` }"
+          :style="{ width: `${(timeLeft / 600) * 100}%` }"
         ></div>
         <p class="timer-text">Time Left: {{ timeLeft }} seconds</p>
     </div>
@@ -48,7 +48,7 @@ const playerName = ref(route.params.playerName);
 const socket = io('http://localhost:3001');
 const isStarted = ref(false);
 const isGameEnd = ref(false);
-const timeLeft = ref(0);
+const timeLeft = ref(99);
 
 onMounted(() => {
   socket.emit('hostRoom', { roomId: roomId.value });
@@ -106,7 +106,8 @@ const getRankEmoji = (index) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  margin: -20px;
+  padding: 30px;
   background-color: black;
   color: white;
   min-height: 100vh;

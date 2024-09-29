@@ -67,11 +67,10 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
   background-color: black;
-  margin: 0;
-  padding: 0;
+  height: 100vh;
+  margin: -10px;
+  padding: 1px;
   color: white;
 }
 

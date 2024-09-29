@@ -50,7 +50,7 @@ const socket = io('http://localhost:3001');
 const isStarted = ref(false);
 const timeLeft = ref(9999); // Adjust based on your game settings
 const isGameEnd = ref(false);
-const maxTime = 300; // Adjust to match the max time for your game
+const maxTime = 600; // Adjust to match the max time for your game
 
 onMounted(() => {
   socket.emit('hostRoom', { roomId: roomId.value });
@@ -109,11 +109,11 @@ const sortedPlayers = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   background-color: black;
+  height: 100vh;
+  margin: -10px;
+  padding: 30px;
   color: white;
-  min-height: 100vh;
-  box-sizing: border-box;
 }
 
 .room-id-section {

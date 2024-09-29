@@ -36,7 +36,7 @@
 
     <!-- หลอดนับถอยหลัง -->
     <div class="timer-bar">
-      <div class="progress" :style="{ width: `${(timeLeft / 300) * 100}%` }"></div>
+      <div class="progress" :style="{ width: `${(timeLeft / 600) * 100}%` }"></div>
       <p class="timer-text">Time Left: {{ timeLeft }} seconds</p>
     </div>
   </div>
@@ -63,7 +63,7 @@
   const selectedOperator = ref(null);
   const selectedNumber = ref(null);
   const resultIs24 =ref(false);
-  const timeLeft = ref(0);
+  const timeLeft = ref(99);
   
   onMounted(() => {
     socket.emit('joinGame', { roomId: roomId.value, playerName: playerName.value });
@@ -294,8 +294,9 @@
   align-items: center;
   background: black;
   color: white;
-  padding: 20px;
-  min-height: 100vh;
+  margin: -20px;
+  padding: 30px;
+  height: 100vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 

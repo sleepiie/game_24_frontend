@@ -43,7 +43,7 @@ const roomId = ref(route.params.roomId);
 const playerName = ref(route.params.playerName);
 const players = ref({});
 const socket = io('http://localhost:3001');
-
+let isJoiningGame = false;
 
 
 onMounted(() => {
@@ -54,16 +54,46 @@ onMounted(() => {
   });
 
   socket.on('gameStarted', () => {
+    isJoiningGame = true;
     router.push(`/game-${roomId.value}-${playerName.value}`);
   });
   socket.on('roomEnded', () => {
     router.push(`/`);
   });
+
+  socket.on('leftRoom', () => {
+    router.push('/');
+  });
+  
 });
 
-onUnmounted(() => {
-  socket.disconnect();
+onBeforeUnmount(() => {
+  if (!isJoiningGame) {
+    leaveRoom();
+  }
 });
+
+
+onUnmounted(() => {
+  socket.off('updatePlayers');
+  socket.off('gameStarted');
+  socket.off('roomEnded');
+  socket.off('leftRoom');
+});
+
+const leaveRoom = () => {
+  socket.emit('leaveRoom', { roomId: roomId.value, playerName: playerName.value });
+};
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', (event) => {
+    if (!isJoiningGame) {
+      leaveRoom();
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  });
+}
 
 </script>
 
@@ -73,7 +103,8 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  margin: -20px;
+  padding: 30px;
   background-color: #121212;
   color: #ffffff;
   min-height: 100vh;
