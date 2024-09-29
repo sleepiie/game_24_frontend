@@ -33,7 +33,6 @@
     </div>
 
     <button class="reset-button" @click="reset">Reset</button>
-    <button  @click="gotoend">end</button>
 
     <!-- หลอดนับถอยหลัง -->
     <div class="timer-bar">
@@ -142,9 +141,6 @@
         operator.value = op;
         
     }
-  };
-  const gotoend = () => {
-    router.push(`/endgame-${roomId.value}-${playerName.value}`);
   };
 
   const calculateResult = () => {

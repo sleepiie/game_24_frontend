@@ -116,7 +116,7 @@ const getRankEmoji = (index) => {
   flex-direction: column;
   align-items: center;
   margin: -10px;
-  padding: 30px;
+  padding: 20px;
   background-color: black;
   color: white;
   height: 100vh;
