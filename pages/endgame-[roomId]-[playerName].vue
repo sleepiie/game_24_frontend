@@ -31,7 +31,7 @@
         ></div>
         <p class="timer-text">Time Left: {{ timeLeft }} seconds</p>
     </div>
-      <h4 v-if="!isStarted && isGameEnd" class="end-message">Game is Ended</h4>
+      <h4 v-if="isGameEnd && !isStarted" class="end-message">Game is Ended</h4>
   </div>
 </template>
 
@@ -45,10 +45,18 @@ const router = useRouter();
 const roomId = ref(route.params.roomId);
 const players = ref({});
 const playerName = ref(route.params.playerName);
-const socket = io('http://localhost:3001');
+const socket = io('https://game-24-backend.onrender.com');
 const isStarted = ref(false);
 const isGameEnd = ref(false);
 const timeLeft = ref(99);
+
+if (timeLeft.value > 0) {
+  isStarted.value = true;
+}
+else {
+  isStarted.value = false;
+  isGameEnd.value = true;
+}
 
 onMounted(() => {
   socket.emit('hostRoom', { roomId: roomId.value });
@@ -103,15 +111,15 @@ const getRankEmoji = (index) => {
 
 <style scoped>
 .player-end-container {
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: -20px;
+  margin: -10px;
   padding: 30px;
   background-color: black;
   color: white;
-  min-height: 100vh;
-  box-sizing: border-box;
+  height: 100vh;
 }
 
 .room-id-section {

@@ -25,7 +25,7 @@ import { useRouter } from 'vue-router';
 import { io } from 'socket.io-client';
 
 const router = useRouter();
-const socket = io('http://localhost:3001');
+const socket = io('https://game-24-backend.onrender.com');
 const showJoinForm = ref(false);
 const playerName = ref('');
 const roomId = ref('');

@@ -33,6 +33,7 @@
     </div>
 
     <button class="reset-button" @click="reset">Reset</button>
+    <button  @click="gotoend">end</button>
 
     <!-- หลอดนับถอยหลัง -->
     <div class="timer-bar">
@@ -57,7 +58,7 @@
   const firstNumber = ref(null); // เก็บค่าตัวเลขตัวแรก
   const secondNumber = ref(null); // เก็บค่าตัวเลขตัวที่สอง
   const operator = ref(null); // เก็บค่าของเครื่องหมาย
-  const socket = io('http://localhost:3001');
+  const socket = io('https://game-24-backend.onrender.com');
   
 
   const selectedOperator = ref(null);
@@ -141,6 +142,9 @@
         operator.value = op;
         
     }
+  };
+  const gotoend = () => {
+    router.push(`/endgame-${roomId.value}-${playerName.value}`);
   };
 
   const calculateResult = () => {
@@ -285,8 +289,8 @@
   grid-row: 1 / span 5;
   justify-self: center;
   align-self: center;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
 }
 .game-room-container {
   display: flex;

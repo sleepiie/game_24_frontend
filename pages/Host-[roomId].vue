@@ -46,7 +46,7 @@ import { io } from 'socket.io-client';
 const route = useRoute();
 const roomId = ref(route.params.roomId);
 const players = ref({});
-const socket = io('http://localhost:3001');
+const socket = io('https://game-24-backend.onrender.com');
 const isStarted = ref(false);
 const timeLeft = ref(9999); // Adjust based on your game settings
 const isGameEnd = ref(false);

@@ -42,7 +42,7 @@ const router = useRouter();
 const roomId = ref(route.params.roomId);
 const playerName = ref(route.params.playerName);
 const players = ref({});
-const socket = io('http://localhost:3001');
+const socket = io('https://game-24-backend.onrender.com');
 let isJoiningGame = false;
 
 
@@ -64,7 +64,7 @@ onMounted(() => {
   socket.on('leftRoom', () => {
     router.push('/');
   });
-  
+
 });
 
 onBeforeUnmount(() => {
