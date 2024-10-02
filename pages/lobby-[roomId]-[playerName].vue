@@ -118,6 +118,7 @@ if (typeof window !== 'undefined') {
 
 .players-section {
   width: 100%;
+  max-height: 600px;
   max-width: 400px;
   margin-bottom: 20px;
 }
@@ -135,7 +136,7 @@ if (typeof window !== 'undefined') {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 500px;
+  max-height: 600px;
   overflow-y: auto;
   border-radius: 10px;
   margin-bottom: 10px;
