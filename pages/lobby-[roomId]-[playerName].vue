@@ -135,7 +135,7 @@ if (typeof window !== 'undefined') {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 400px;
+  max-height: 500px;
   overflow-y: auto;
   border-radius: 10px;
   margin-bottom: 10px;
