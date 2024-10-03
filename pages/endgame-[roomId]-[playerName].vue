@@ -48,10 +48,11 @@ const playerName = ref(route.params.playerName);
 const socket = io('https://game-24-backend.onrender.com');
 const isStarted = ref(false);
 const isGameEnd = ref(false);
-const timeLeft = ref(0);
+const timeLeft = ref(1);
 
 if (timeLeft.value > 0) {
   isStarted.value = true;
+  isGameEnd.value = flase;
 }
 else {
   isStarted.value = false;
