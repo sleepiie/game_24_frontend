@@ -6,7 +6,7 @@
     </div>
 
     <div v-if="currentNumbers.length" class="game-set-info">
-      <p>{{ currentSetIndex }} / 10</p>
+      <p>{{ currentSetIndex }} / 7</p>
     </div>
 
     <!-- ปุ่มตัวเลข -->
