@@ -6,7 +6,7 @@
     </div>
 
     <div v-if="currentNumbers.length" class="game-set-info">
-      <p>{{ currentSetIndex }} / 15</p>
+      <p>{{ currentSetIndex }} / 10</p>
     </div>
 
     <!-- ปุ่มตัวเลข -->
@@ -36,7 +36,7 @@
 
     <!-- หลอดนับถอยหลัง -->
     <div class="timer-bar">
-      <div class="progress" :style="{ width: `${(timeLeft / 600) * 100}%` }"></div>
+      <div class="progress" :style="{ width: `${(timeLeft / 420) * 100}%` }"></div>
       <p class="timer-text">Time Left: {{ timeLeft }} seconds</p>
     </div>
   </div>

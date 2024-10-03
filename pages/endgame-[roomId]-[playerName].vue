@@ -27,7 +27,7 @@
     <div v-if="isStarted && !isGameEnd" class="timer-bar">
         <div
           class="progress"
-          :style="{ width: `${(timeLeft / 600) * 100}%` }"
+          :style="{ width: `${(timeLeft / 420) * 100}%` }"
         ></div>
         <p class="timer-text">Time Left: {{ timeLeft }} seconds</p>
     </div>
