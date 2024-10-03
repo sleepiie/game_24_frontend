@@ -36,7 +36,7 @@
 
     <!-- หลอดนับถอยหลัง -->
     <div class="timer-bar">
-      <div class="progress" :style="{ width: `${(timeLeft / 420) * 100}%` }"></div>
+      <div class="progress" :style="{ width: `${(timeLeft / 300) * 100}%` }"></div>
       <p class="timer-text">Time Left: {{ timeLeft }} seconds</p>
     </div>
   </div>

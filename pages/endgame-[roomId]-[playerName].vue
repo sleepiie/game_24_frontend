@@ -27,7 +27,7 @@
     <div v-if="isStarted && !isGameEnd" class="timer-bar">
         <div
           class="progress"
-          :style="{ width: `${(timeLeft / 420) * 100}%` }"
+          :style="{ width: `${(timeLeft / 300) * 100}%` }"
         ></div>
         <p class="timer-text">Time Left: {{ timeLeft }} seconds</p>
     </div>
@@ -48,11 +48,10 @@ const playerName = ref(route.params.playerName);
 const socket = io('https://game-24-backend.onrender.com');
 const isStarted = ref(false);
 const isGameEnd = ref(false);
-const timeLeft = ref(1);
+const timeLeft = ref(0);
 
 if (timeLeft.value > 0) {
   isStarted.value = true;
-  isGameEnd.value = flase;
 }
 else {
   isStarted.value = false;

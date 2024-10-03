@@ -50,7 +50,7 @@ const socket = io('https://game-24-backend.onrender.com');
 const isStarted = ref(false);
 const timeLeft = ref(9999); // Adjust based on your game settings
 const isGameEnd = ref(false);
-const maxTime = 420; // Adjust to match the max time for your game
+const maxTime = 300; // Adjust to match the max time for your game
 
 onMounted(() => {
   socket.emit('hostRoom', { roomId: roomId.value });
